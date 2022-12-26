@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.andela.currency.ui.converter.ConverterViewModel" />
+    </data>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +34,8 @@
                     android:id="@+id/sp_from"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:selection="@{viewmodel.getFrom}"/>
 
                 <ImageButton
                     android:id="@+id/iv_swap"
@@ -41,7 +47,8 @@
                     android:id="@+id/sp_to"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:selection="@{viewmodel.getTo}"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -59,7 +66,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="From"
+                        android:hint="@string/label_input"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,18 +74,14 @@
                     android:layout_width="52dp"
                     android:layout_height="wrap_content" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txt_input_to"
+                <TextView
+                    android:id="@+id/tv_converted_value"
+                    style="@style/Widget.Design.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="To"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:text="@{viewmodel.convertedValue}" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
