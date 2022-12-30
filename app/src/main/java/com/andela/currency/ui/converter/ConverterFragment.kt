@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,11 +25,8 @@ import kotlinx.coroutines.flow.onEach
 class ConverterFragment : Fragment() {
 
     private val converterViewModel: ConverterViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     lateinit var binding: FragmentConverterBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,23 +43,35 @@ class ConverterFragment : Fragment() {
     }
 
     private fun observe() {
-        converterViewModel.mState
+        converterViewModel.state
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            .onEach { state -> handleStateChange(state) }
+            .onEach { state -> handleProgressStateChange(state) }
+            .launchIn(lifecycleScope)
+        converterViewModel.symbols
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach { symbols ->
+                val symArra = arrayListOf<String>()
+                symArra.addAll(symbols.keys)
+                bindViews(symArra)
+            }
+            .launchIn(lifecycleScope)
+        converterViewModel.exchangeRatesState
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .onEach { rates ->
+                converterViewModel.convertValue()
+            }
             .launchIn(lifecycleScope)
     }
 
-    private fun handleStateChange(state: ConverterState) {
+    private fun handleProgressStateChange(state: ConverterState) {
         when (state) {
             is ConverterState.IsLoading -> changeProgressVisibility(state.isLoading)
 
-            is ConverterState.SuccessLogin -> {
-                val symbols = arrayListOf<String>()
-                symbols.addAll(state.symbols.keys)
-                bindViews(symbols)
+            is ConverterState.SuccessLoading -> {
+                changeProgressVisibility(false)
             }
 
-            is ConverterState.ErrorLoadingSymbols -> Toast.makeText(
+            is ConverterState.ErrorLoading -> Toast.makeText(
                 context,
                 state.message,
                 Toast.LENGTH_SHORT
@@ -102,6 +112,7 @@ class ConverterFragment : Fragment() {
             }
         }
 
+        binding.ivSwap.setOnClickListener { converterViewModel.swapValues() }
         (binding.spTo as Spinner).apply {
             adapter = context?.let { ArrayAdapter(it, R.layout.simple_spinner_item, symbols) }
             onItemSelectedListener = object : OnItemSelectedListener {
@@ -116,6 +127,12 @@ class ConverterFragment : Fragment() {
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+        }
+        binding.txtInputFrom.editText?.addTextChangedListener {
+            if (it?.isNotEmpty() == true) {
+                converterViewModel.setInput(it.toString())
+                converterViewModel.convertValue()
             }
         }
     }

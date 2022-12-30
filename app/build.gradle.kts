@@ -79,12 +79,15 @@ dependencies {
     val dagger_hilt_viewmodel_version = "1.0.0-alpha03"
     implementation ("com.google.dagger:hilt-android:$dagger_hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$dagger_hilt_version")
-    //implementation ("androidx.hilt:hilt-lifecycle-viewmodel:$dagger_hilt_viewmodel_version")
-    //kapt ("androidx.hilt:hilt-compiler:$dagger_hilt_viewmodel_version")
 
-    // Testing Navigation
+    // Testing
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.44")
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }

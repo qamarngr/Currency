@@ -22,7 +22,7 @@ class SymbolsModule {
 
     @Singleton
     @Provides
-    fun provideProductRepository(productApi: SymbolsApi) : SymbolsRepository {
-        return SymbolsRepositoryImpl(productApi)
+    fun provideProductRepository(symbolsApi: SymbolsApi) : SymbolsRepository {
+        return SymbolsRepositoryImpl(symbolsApi)
     }
 }

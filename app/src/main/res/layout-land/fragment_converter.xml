@@ -41,7 +41,8 @@
                     android:id="@+id/iv_swap"
                     android:layout_width="52dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_swap" />
+                    android:src="@drawable/ic_swap"
+                    />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/sp_to"
@@ -67,7 +68,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/label_input"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:text="@{viewmodel.getInput}"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Space
